@@ -4,8 +4,8 @@ test:
 
 all:
   sf_media_browser:
-    root_dir:               /uploads       # Browsable root directory relative to sf_web_dir
-    thumbnails_enabled:     false          # Enable thumbnail creation on upload (requires sfImageTransformPlugin)
+    root_dir:               /uploads/usuarios       # Browsable root directory relative to sf_web_dir
+    thumbnails_enabled:     true          # Enable thumbnail creation on upload (requires sfImageTransformPlugin)
     thumbnails_dir:         .thumbnails    # Directory name for storing thumbnails
     thumbnails_max_width:   64             # If thumbnails are enabled, you may define their size
     thumbnails_max_height:  64   
@@ -47,6 +47,10 @@ all:
         extensions: [txt]
       tarball:
         extensions: [tar, gz, zip, bzip, gzip, rar, 7z]
+    undelete_dir:
+      - galeria
+      - audio
+      - archivos
   sfImageTransformPlugin:       # see sfImageTransformPlugin for more info.
     mime_type:
       auto_detect:  true

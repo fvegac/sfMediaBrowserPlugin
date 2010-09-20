@@ -32,6 +32,24 @@ sf_media_browser_file_create:
   params: { module: sfMediaBrowser, action: createFile }
   requirements: { sf_method: post }
 
+sf_media_browser_upload_multi:
+  url:    sf_media_browser/upload_multi
+  class:  sfRequestRoute
+  params: { module: sfMediaBrowser, action: uploadmulti }
+  requirements: { sf_method: get }
+
+sf_media_browser_files_create_multi:
+  url:    sf_media_browser/files_create_multi
+  class:  sfRequestRoute
+  params: { module: sfMediaBrowser, action: filescreatemulti }
+  requirements: { sf_method: post }
+
+sf_media_browser_plupload:
+  url:    sf_media_browser/plupload
+  class:  sfRequestRoute
+  params: { module: sfMediaBrowser, action: plupload }
+  requirements: { sf_method: post }
+  
 sf_media_browser_file_delete:
   url:    sf_media_browser/file_delete
   class:  sfRequestRoute

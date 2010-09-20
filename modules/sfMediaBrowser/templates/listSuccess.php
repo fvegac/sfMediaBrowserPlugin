@@ -2,7 +2,7 @@
 <?php use_helper('I18N') ?>
 <?php $upload_form->getWidgetSchema()->setFormFormatterName('list') ?>
 <?php $dir_form->getWidgetSchema()->setFormFormatterName('list') ?>
-
+<div id="" style="width:1000px;padding-bottom:0.5em;margin:0 auto;">
 <div id="sf_media_browser_user_message"></div>
 
 <div id="sf_media_browser_forms">
@@ -12,6 +12,7 @@
       <?php echo $upload_form ?>
       <input type="submit" class="submit" value="<?php echo __('Save') ?>" />
     </form>
+    <?php echo link_to(__('Multiple File Upload'),'@sf_media_browser_upload_multi?dir='.$display_dir)?>
   </fieldset>
 
   <fieldset id="sf_media_browser_mkdir">
@@ -49,7 +50,13 @@
   </div>
 <?php endif ?>
 
-
+<div style="width:100%">
+    <div style="width:250px;float: left">
+       
+       <?php include_component('sfMediaBrowser', 'tree'); ?>
+        
+    </div>
+    <div style="width:750px;float: right">
 
 <h2><?php echo sprintf(__('Current directory : %s'), $display_dir) ?></h2>
 
@@ -70,7 +77,11 @@
       <?php echo link_to(image_tag('/sfMediaBrowserPlugin/images/icons/folder.png'), $current_route, array_merge($sf_data->getRaw('current_params'), array('dir' => $relative_dir.'/'.$dir)), array('title' => $dir)) ?>
     </div>
     <label class="name"><?php echo $dir ?></label>
-    <div class="action"><?php echo link_to('delete', 'sf_media_browser_dir_delete', array('sf_method' => 'delete', 'directory' => urlencode($relative_dir.'/'.$dir)), array('class' => 'delete', 'title' => sprintf(__('Delete folder "%s"'), $dir))) ?></div>
+    <div class="action">
+        <?php if(!in_array($dir, sfConfig::get('app_sf_media_browser_undelete_dir'))): ?>
+            <?php echo link_to('delete', 'sf_media_browser_dir_delete', array('sf_method' => 'delete', 'directory' => urlencode($relative_dir.'/'.$dir)), array('class' => 'delete', 'title' => sprintf(__('Delete folder "%s"'), $dir))) ?>
+        <?php endif;?>
+    </div>
   </li>
 <?php endforeach ?>
 
@@ -81,8 +92,13 @@
 <?php endforeach ?>
 </ul>
 
+ </div>
+</div>
+
 <script type="text/javascript">
 var delete_msg = "<?php echo __('Are you sure you want to delete this item ?') ?>";
 var move_file_url = "<?php echo url_for('sf_media_browser_move') ?>";
 var rename_file_url = "<?php echo url_for('sf_media_browser_rename') ?>";
 </script>
+
+</div>

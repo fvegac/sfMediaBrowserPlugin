@@ -14,12 +14,21 @@ class BasesfMediaBrowserActions extends sfActions
 {
   public function preExecute()
   {
+    sfContext::getInstance()->getUser()->setCulture('es');
+
+
+    if(!sfContext::getInstance()->getUser()->hasAttribute('root_dir'))
+        sfContext::getInstance()->getUser()->setAttribute('root_dir', sfconfig::get('app_sf_media_browser_root_dir').'/'.sfContext::getInstance()->getUser()->getGuardUser()->getId());
     // Configured root dir
-    $this->root_dir = sfconfig::get('app_sf_media_browser_root_dir');
+    $this->root_dir = sfContext::getInstance()->getUser()->getAttribute('root_dir');
     
     // Calculated root path
     $this->root_path = realpath(sfConfig::get('sf_web_dir').'/'.$this->root_dir);
-    
+
+     // Calculated root path
+    $this->root_path_alt = realpath(sfConfig::get('sf_web_dir'));
+    //var_dump($this->root_dir);
+    //var_dump($this->root_path);
     $this->requested_dir = urldecode($this->getRequestParameter('dir'));
     
     $this->requested_dir = $this->checkPath($this->root_path.'/'.$this->requested_dir)
@@ -56,6 +65,14 @@ class BasesfMediaBrowserActions extends sfActions
     // forms
     $this->upload_form = new sfMediaBrowserUploadForm(array('directory' => $this->display_dir));
     $this->dir_form = new sfMediaBrowserDirectoryForm(array('directory' => $this->display_dir));
+
+    // undelete dir
+    $dir_undelete = sfConfig::get('app_sf_media_browser_undelete_dir');
+    //var_dump($this->dir_undelete);
+    $this->dir_undelete=array();
+    foreach($dir_undelete as $dir_un){
+        $this->dir_undelete[]= $dir_un;
+    }
   }
 
 
@@ -75,8 +92,13 @@ class BasesfMediaBrowserActions extends sfActions
     {
       $real_path = $form->getValue('directory');
       $new_dir = $form->getValue('directory').'/'.$form->getValue('name');
+
       $created = @mkdir($new_dir);
       @chmod($new_dir, 0777);
+      if(sfConfig::get('app_sf_media_browser_thumbnails_enabled')){
+        @mkdir($new_dir.'/.thumbnails');
+        @chmod($new_dir.'/.thumbnails', 0777);
+       }
       $this->getUser()->setFlash($created ? 'notice' : 'error', 'directory.create');
     }
     else
@@ -135,16 +157,34 @@ class BasesfMediaBrowserActions extends sfActions
    */
   public function executeMove(sfWebRequest $request)
   {
-    $current_path = $this->root_path.'/'.$request->getParameter('file');
-    $new_path = $this->root_path.'/'.urldecode($request->getParameter('dir'));
+    $current_path = $this->root_path.'/'.str_replace($this->root_dir, "", $request->getParameter('file'));
+
+    
+    $filename = basename($request->getParameter('file'));
+        
+    if(sfConfig::get('app_sf_media_browser_thumbnails_enabled')){
+        $new = ".thumbnails/";
+        $filename_thum = str_replace($filename, $new.$filename ,$request->getParameter('file'));
+        $current_path_thum = realpath(sfConfig::get('sf_web_dir')).'/'.$filename_thum;
+        $new_path_thum = $this->root_path.urldecode($request->getParameter('dir')).'/.thumbnails/'.$filename;
+        $moved = @rename($current_path_thum, $new_path_thum);
+    }
+    
+    $new_path = $this->root_path.'/'.urldecode($request->getParameter('dir')).'/'.$filename;
+
+    //var_dump($current_path);
+    //var_dump($new_path);
+
     $this->checkPath($current_path);
     $this->checkPath(dirname($new_path));
     
     $error = null;
+    //var_dump($request->getParameter('file'));
     $moved = @rename($current_path, $new_path);
+    
     if(!$moved)
     {
-      $this->logMessage(sprintf('Failed renaming "%s" to "%s".', $curent_path, $new_path), 'err');
+      $this->logMessage(sprintf('Failed renaming "%s" to "%s".', $current_path, $new_path), 'err');
     }
     
     if($request->isXmlHttpRequest())
@@ -174,16 +214,18 @@ class BasesfMediaBrowserActions extends sfActions
   
   public function executeRename(sfWebRequest $request)
   {
-    $file = new sfMediaBrowserFileObject($request->getParameter('file'));
+    $file_standar = str_replace(sfconfig::get('app_sf_media_browser_root_dir').'/'.sfContext::getInstance()->getUser()->getGuardUser()->getId(), '', $request->getParameter('file'));
+
+    $file = new sfMediaBrowserFileObject($file_standar,  $this->root_path);
     $name = sfMediaBrowserStringUtils::slugify(pathinfo($request->getParameter('name'), PATHINFO_FILENAME));
     $ext = $file->getExtension();
     $valid_filename = $ext ? $name.'.'.$ext : $name;
-    $new_name = dirname($file->getPath()).'/'.$valid_filename;
-    
+    $new_name = dirname($file->getPath()).'/'.$valid_filename;    
     $error = null;
     try
     {
-      $renamed = rename($file->getPath(), $new_name);
+      if(!in_array($file->getName(), sfConfig::get('app_sf_media_browser_undelete_dir')))
+        $renamed = rename($file->getPath(), $new_name);
     }
     catch(Exception $e)
     {

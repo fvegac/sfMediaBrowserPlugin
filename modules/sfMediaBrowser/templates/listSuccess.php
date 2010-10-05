@@ -1,30 +1,13 @@
 <?php sfMediaBrowserUtils::loadAssets('list') ?>
-<?php use_helper('I18N') ?>
+<?php use_helper('I18N', 'Text') ?>
 <?php $upload_form->getWidgetSchema()->setFormFormatterName('list') ?>
 <?php $dir_form->getWidgetSchema()->setFormFormatterName('list') ?>
-<div id="" style="width:1000px;padding-bottom:0.5em;margin:0 auto;">
+<div id="" style="width:930px;padding-bottom:0.5em;margin:0 auto;">
 <div id="sf_media_browser_user_message"></div>
 
 <div id="sf_media_browser_forms">
-  <fieldset id="sf_media_browser_upload">
-    <legend><?php echo __('Upload a file') ?></legend>
-    <form action="<?php echo url_for('sf_media_browser_file_create') ?>" method="post" enctype="multipart/form-data">
-      <?php echo $upload_form ?>
-      <input type="submit" class="submit" value="<?php echo __('Save') ?>" />
-    </form>
-    <?php echo link_to(__('Multiple File Upload'),'@sf_media_browser_upload_multi?dir='.$display_dir)?>
-  </fieldset>
-
-  <fieldset id="sf_media_browser_mkdir">
-    <legend><?php echo __('Create a new directory') ?></legend>
-    <form action="<?php echo url_for('sf_media_browser_dir_create') ?>" method="post">
-      <?php echo $dir_form ?>
-      <input type="submit" class="submit" value="<?php echo __('Create') ?>" />
-    </form>
-  </fieldset>
   <div class="clear"></div>
 </div>
-
 
 <?php if($sf_user->hasFlash('error')): ?>
   <div class="error">
@@ -49,22 +32,56 @@
   <?php endif ?>
   </div>
 <?php endif ?>
+<script type="text/javascript">
+//<![CDATA[
+function ShowHideFile(){
+    $("#res_form_file").animate({"height": "toggle"}, { duration: 1000 });
+    $("#res_form_dir").slideUp();
+}
+
+function ShowHideDir(){
+    $("#res_form_file").slideUp();
+    $("#res_form_dir").animate({"height": "toggle"}, { duration: 1000 });
+}
+//]]>
+</script>
 
 <div style="width:100%">
-    <div style="width:250px;float: left">
-       
+    <div style="width:200px;float: left">
+        <?php if($display_dir!='/'):?>
+       <h3>Opciones:</h3>
+       <p style="margin-left:10px">
+       <a onclick="ShowHideDir(); return false;" href="#">Crear un directorio</a><br>
+       <a onclick="ShowHideFile(); return false;" href="#">Subir un archivo</a><br>
+       <?php echo link_to(__('Subir multiples archivos'),'@sf_media_browser_upload_multi?dir='.$display_dir)?>
+       </p>
+       <?php endif;?>
        <?php include_component('sfMediaBrowser', 'tree'); ?>
-        
+       
     </div>
-    <div style="width:750px;float: right">
+    <div style="width:700px;float: right">
+        <div id="res_form_file" style="display:none">
+            <h3><?php echo __('Upload a file') ?></h3>
+            <form action="<?php echo url_for('sf_media_browser_file_create') ?>" method="post" enctype="multipart/form-data">
+              <?php echo $upload_form ?>
+              <input type="submit" class="submit" value="<?php echo __('Save') ?>" />
+            </form>
+        </div>
+        <div id="res_form_dir" style="display:none">
+            <h3><?php echo __('Create a new directory') ?></h3>
+            <form action="<?php echo url_for('sf_media_browser_dir_create') ?>" method="post">
+              <?php echo $dir_form ?>
+              <input type="submit" class="submit" value="<?php echo __('Create') ?>" />
+            </form>
+        </div>
 
-<h2><?php echo sprintf(__('Current directory : %s'), $display_dir) ?></h2>
+<h3><?php echo sprintf(__('Current directory : %s'), $display_dir) ?></h3>
 
 
 <ul id="sf_media_browser_list">
 
   <?php if($parent_dir): ?>
-  <li class="up">
+  <li class="up"  style="border:none">
     <div class="icon">
       <?php echo link_to(image_tag('/sfMediaBrowserPlugin/images/icons/up.png'), $current_route, array_merge($sf_data->getRaw('current_params'), array('dir' => $parent_dir))) ?>
     </div>

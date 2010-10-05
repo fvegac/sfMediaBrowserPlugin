@@ -1,8 +1,5 @@
-<label>Directorios:</label><br>
+<h3>Directorios:</h3>
 <div style="">
-
-    <input type="hidden" value="" id="categorias_sel" name="categorias_sel">
-
 <div id="demo1" class="demo">
   <ul class="nested_set_list">
         <?php $prevLevel = 0;$actual='"phtml_0"';?>
@@ -35,7 +32,7 @@
 $(function () {
         $("#demo1").jstree({
                 themes : {
-			"theme" : "apple"
+			"theme" : "classic"
 		},
                 core : { "initially_open" : [<?php echo $actual; ?>] },
 		plugins : [ "themes", "html_data" , "types" ]

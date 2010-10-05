@@ -20,15 +20,14 @@ class sfMediaBrowserImageObject extends sfMediaBrowserFileObject
   protected $dimensions = null,
             $thumbnail = null
             ;
-
   
   public function __construct($file)
   {
     parent::__construct($file);
-    if($this->getType() != 'image')
-    {
-      throw new sfException(sprintf('The file "%s" is not an image', $file));
-    }
+//    if($this->getType() != 'image')
+//    {
+//      throw new sfException(sprintf('The file "%s" is not an image', $file));
+//    }
   }
   
 
@@ -60,27 +59,14 @@ class sfMediaBrowserImageObject extends sfMediaBrowserFileObject
   }
   
   
-  public function getThumbnail()
-  {
-    if(!$this->thumbnail)
-    {
-      $this->thumbnail = new self($this->getUrlDir().'/'.sfconfig::get('app_sf_media_browser_thumbnails_dir').'/'.$this->getName());
-    }
-    return file_exists($this->thumbnail->getPath())
-           ? $this->thumbnail
-           : null
-           ;
-  }
   
   
   public function getIcon()
   {
-    $thumbnail = $this->getThumbnail();
-    if($thumbnail)
-    {
-      return $thumbnail->getUrl();
-    }
-    return parent::getIcon();
+   
+    return url_for('jsThumbnail/thumbnail').'?img='.$this->file_url.'&maxx='.sfConfig::get('app_sf_media_browser_thumbnails_max_width', 48).'&maxy='.sfConfig::get('app_sf_media_browser_thumbnails_max_height', 48).'&mode=crop';
+   
+   // return parent::getIcon();
   }
   
   

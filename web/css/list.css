@@ -41,7 +41,7 @@ ul#sf_media_browser_list li {
   margin:       0 10px 10px 0;
   min-width:    100px;
   background:   #EEE;
-  border:       1px solid #999;
+  border:       1px solid #E0E0E0;
   text-align:   center;
   background-color: #FFF;
   list-style:   none;
@@ -55,8 +55,8 @@ ul#sf_media_browser_list img {
 }
 
 ul#sf_media_browser_list .folder a, ul#sf_media_browser_list .icon a {
-  width:      100px;
-  height:     85px;
+  width:      75px;
+  height:     60px;
   margin:     auto;
 }
 ul#sf_media_browser_list .icon img {

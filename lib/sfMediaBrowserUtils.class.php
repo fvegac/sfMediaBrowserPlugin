@@ -35,7 +35,7 @@ class sfMediaBrowserUtils
     }
     return 'file';
   }
-  
+
 
   static public function getIconFromType($type)
   {
@@ -49,8 +49,7 @@ class sfMediaBrowserUtils
             ;
       return $dir.'/'.$icon.'.png';
     }
-    return $dir.'/file.png';
-    
+    return $dir.'/file.png';    
   }
 
   

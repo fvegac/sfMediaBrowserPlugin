@@ -1,8 +1,10 @@
-<?php use_helper('I18N') ?>
+<?php use_helper('I18N','Text') ?>
+<?php use_helper('Thumbnail') ?>
+
 <div class="icon">
-  <?php echo link_to(image_tag($file->getIcon()), $file->getUrl(), array('target' => '_blank')) ?>
+  <?php echo link_to('<img src="'.$file->getIcon().'">', $file->getUrl(), array('target' => '_blank')) ?>  
 </div>
-<label class="name"><?php echo $file->getName() ?></label>
+<label class="name"><?php echo truncate_text($file->getName(),18) ?></label>
 <div class="action">
   <span class="size"><?php echo $file->getSize() ?> Kb</span>
   <?php if($file->isImage()): ?>

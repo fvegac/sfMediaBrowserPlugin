@@ -16,15 +16,18 @@ class BasesfMediaBrowserActions extends sfActions
   {
     sfContext::getInstance()->getUser()->setCulture('es');
 
+    //Directorio de referencia de acuerdo a la configuración que se desee
+    $this->dir_reference= sfContext::getInstance()->getUser()->getGuardUser()->getUsername();
 
-    if(!sfContext::getInstance()->getUser()->hasAttribute('root_dir'))
-        sfContext::getInstance()->getUser()->setAttribute('root_dir', sfconfig::get('app_sf_media_browser_root_dir').'/'.sfContext::getInstance()->getUser()->getGuardUser()->getId());
+    //Se configura en una variable de sesion la ruta del directorio raiz
+    sfContext::getInstance()->getUser()->setAttribute('root_dir', sfconfig::get('app_sf_media_browser_root_dir').'/'.$this->dir_reference);
+
     // Configured root dir
     $this->root_dir = sfContext::getInstance()->getUser()->getAttribute('root_dir');
     
     // Calculated root path
     $this->root_path = realpath(sfConfig::get('sf_web_dir').'/'.$this->root_dir);
-
+    
      // Calculated root path
     $this->root_path_alt = realpath(sfConfig::get('sf_web_dir'));
     //var_dump($this->root_dir);
@@ -214,7 +217,7 @@ class BasesfMediaBrowserActions extends sfActions
   
   public function executeRename(sfWebRequest $request)
   {
-    $file_standar = str_replace(sfconfig::get('app_sf_media_browser_root_dir').'/'.sfContext::getInstance()->getUser()->getGuardUser()->getId(), '', $request->getParameter('file'));
+    $file_standar = str_replace(sfconfig::get('app_sf_media_browser_root_dir').'/'.$this->dir_reference, '', $request->getParameter('file'));
 
     $file = new sfMediaBrowserFileObject($file_standar,  $this->root_path);
     $name = sfMediaBrowserStringUtils::slugify(pathinfo($request->getParameter('name'), PATHINFO_FILENAME));

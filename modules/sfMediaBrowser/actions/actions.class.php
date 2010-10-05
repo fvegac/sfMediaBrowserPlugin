@@ -11,7 +11,6 @@ require_once dirname(__FILE__).'/../lib/BasesfMediaBrowserActions.class.php';
 class sfMediaBrowserActions extends BasesfMediaBrowserActions
 {
   public function executeUploadmulti(sfWebRequest $request) {
-
     $this->dir_upload = $request->getParameter('dir');
   }
 
@@ -27,8 +26,12 @@ class sfMediaBrowserActions extends BasesfMediaBrowserActions
         $info = pathinfo($file);
         $nombre_archivo_se =  basename($file,'.'.$info['extension']);
         $extension = $info['extension'];
-        $nombre_archvo_nuevo = $file;
-        rename(realpath(sfConfig::get('sf_web_dir').'/sfMediaBrowserPlugin/plupload_tmp').'/'.$nombre_tmp, realpath(sfConfig::get('sf_web_dir').$this->getUser()->getAttribute('root_dir').'/'.$dir).'/'.$nombre_archvo_nuevo);
+        $nombre_archivo_nuevo = $file;
+        $filename = $nombre_archivo_nuevo;
+        $name = sfMediaBrowserStringUtils::slugify(pathinfo($filename, PATHINFO_FILENAME));
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $fullname = $ext ? $name.'.'.$ext : $name;
+        rename(realpath(sfConfig::get('sf_web_dir').'/sfMediaBrowserPlugin/plupload_tmp').'/'.$nombre_tmp, realpath(sfConfig::get('sf_web_dir').$this->getUser()->getAttribute('root_dir').'/'.$dir).'/'.$fullname);
     }
 
     $this->redirect('@sf_media_browser?dir='.$dir);

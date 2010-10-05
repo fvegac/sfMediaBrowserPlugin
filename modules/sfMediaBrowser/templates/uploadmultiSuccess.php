@@ -1,14 +1,14 @@
 <?php sfMediaBrowserUtils::loadAssets('list') ?>
 <?php $resize='';?>
-<?php if($dir_upload=='/archivos'):?>
+<?php if(strstr($dir_upload, '/archivos')):?>
 <?php $file_type='title : "Docs and Audio Files", extensions : "pdf,doc,ppt,mp3"';?>
 <?php endif;?>
-<?php if($dir_upload=='/galeria'):?>
-<?php $file_type='title : "Image files", extensions : "jpg,gif,png"';?>
-<?php $resize='resize :{width : 800, height : 600, quality : 80},';?>
+<?php if(strstr($dir_upload, '/galeria')):?>
+<?php $file_type='title : "Image files", extensions : "jpg,gif,png,JPG,PNG"';?>
+<?php $resize='resize :{width : 800, height : 600, quality : 85},';?>
 <?php endif;?>
-<?php if($dir_upload=='/Image'):?>
-<?php $file_type='title : "Image files", extensions : "jpg,gif,png"';?>
+<?php if(strstr($dir_upload, '/Image')):?>
+<?php $file_type='title : "Image files", extensions : "jpg,gif,png,JPG,PNG"';?>
 <?php $resize='resize :{width : 400, height : 300, quality : 80},';?>
 <?php endif;?>
 

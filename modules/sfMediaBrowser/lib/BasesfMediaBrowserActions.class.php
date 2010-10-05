@@ -162,17 +162,8 @@ class BasesfMediaBrowserActions extends sfActions
   {
     $current_path = $this->root_path.'/'.str_replace($this->root_dir, "", $request->getParameter('file'));
 
-    
     $filename = basename($request->getParameter('file'));
-        
-    if(sfConfig::get('app_sf_media_browser_thumbnails_enabled')){
-        $new = ".thumbnails/";
-        $filename_thum = str_replace($filename, $new.$filename ,$request->getParameter('file'));
-        $current_path_thum = realpath(sfConfig::get('sf_web_dir')).'/'.$filename_thum;
-        $new_path_thum = $this->root_path.urldecode($request->getParameter('dir')).'/.thumbnails/'.$filename;
-        $moved = @rename($current_path_thum, $new_path_thum);
-    }
-    
+     
     $new_path = $this->root_path.'/'.urldecode($request->getParameter('dir')).'/'.$filename;
 
     //var_dump($current_path);
@@ -183,7 +174,8 @@ class BasesfMediaBrowserActions extends sfActions
     
     $error = null;
     //var_dump($request->getParameter('file'));
-    $moved = @rename($current_path, $new_path);
+    if(!in_array($filename, sfConfig::get('app_sf_media_browser_undelete_dir')))
+        $moved = @rename($current_path, $new_path);    
     
     if(!$moved)
     {

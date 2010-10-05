@@ -64,7 +64,7 @@ class sfMediaBrowserImageObject extends sfMediaBrowserFileObject
   public function getIcon()
   {
    
-    return url_for('jsThumbnail/thumbnail').'?img='.$this->file_url.'&maxx='.sfConfig::get('app_sf_media_browser_thumbnails_max_width', 48).'&maxy='.sfConfig::get('app_sf_media_browser_thumbnails_max_height', 48).'&mode=crop';
+    return url_for('sfThumbnailFly/thumbnail').'?img='.$this->file_url.'&maxx='.sfConfig::get('app_sf_media_browser_thumbnails_max_width', 48).'&maxy='.sfConfig::get('app_sf_media_browser_thumbnails_max_height', 48).'&mode=crop';
    
    // return parent::getIcon();
   }
@@ -72,18 +72,7 @@ class sfMediaBrowserImageObject extends sfMediaBrowserFileObject
   
   
   public function delete()
-  {
-    // try to delete the thumbnail if exists
-    try
-    {
-      $thumbnail = $this->getThumbnail();
-      if($thumbnail)
-      {
-        $thumbnail->delete();
-      }
-    }
-    catch(sfException $e){}
-    
+  {       
     // delete current file
     parent::delete();
   }

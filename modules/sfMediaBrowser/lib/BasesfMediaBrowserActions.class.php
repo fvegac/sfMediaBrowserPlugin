@@ -97,11 +97,7 @@ class BasesfMediaBrowserActions extends sfActions
       $new_dir = $form->getValue('directory').'/'.$form->getValue('name');
 
       $created = @mkdir($new_dir);
-      @chmod($new_dir, 0777);
-      if(sfConfig::get('app_sf_media_browser_thumbnails_enabled')){
-        @mkdir($new_dir.'/.thumbnails');
-        @chmod($new_dir.'/.thumbnails', 0777);
-       }
+      @chmod($new_dir, 0777);      
       $this->getUser()->setFlash($created ? 'notice' : 'error', 'directory.create');
     }
     else

@@ -48,13 +48,15 @@ function ShowHideDir(){
 
 <div style="width:100%">
     <div style="width:200px;float: left">
-        <?php if($display_dir!='/'):?>
-       <h3>Opciones:</h3>
-       <p style="margin-left:10px">
-       <a onclick="ShowHideDir(); return false;" href="#">Crear un directorio</a><br>
-       <a onclick="ShowHideFile(); return false;" href="#">Subir un archivo</a><br>
-       <?php echo link_to(__('Subir multiples archivos'),'@sf_media_browser_upload_multi?dir='.$display_dir)?>
-       </p>
+       <?php if($display_dir!='/'):?>
+           <h3>Opciones:</h3>
+           <p style="margin-left:10px">
+           <?php if($display_dir!='/archivos'):?>
+           <a onclick="ShowHideDir(); return false;" href="#">Crear un directorio</a><br>
+           <?php endif;?>
+           <?php echo link_to(__('Subir multiples archivos'),'@sf_media_browser_upload_multi?dir='.$display_dir)?><br> 
+           <a onclick="ShowHideFile(); return false;" href="#">Subir un archivo</a>          
+           </p>
        <?php endif;?>
        <?php include_component('sfMediaBrowser', 'tree'); ?>
        
